@@ -1,0 +1,44 @@
+body{
+    text-align: center;
+}
+
+#gameboard{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 10px;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.square{
+    border: 1px solid black;
+    font-size: 50px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px; /*centers text vertically*/
+    cursor: pointer;
+}
+
+/*https://www.w3schools.com/cssref/sel_nth-child.asp*/
+.square:first-child,
+.square:nth-child(2),
+.square:nth-child(3){
+    border-top: none;
+}
+
+.square:nth-child(7),
+.square:nth-child(8),
+.square:nth-child(9){
+    border-bottom: none;
+}
+
+.square:nth-child(3n + 1){
+    border-left: none;
+}
+
+.square:nth-child(3n + 3){
+    border-right: none;
+}
