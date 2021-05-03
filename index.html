@@ -5,13 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Tic-tac-toe</title>
 </head>
 <body>
 
     <h1 id="title">Tic-tac-toe</h1>
 
-    <div id="message">Player1's turn</div>
+    <div id="message">Click or Tap on the board to start game</div>
     <div id="gameboard">
         <div class="square" data-index="0"></div>
         <div class="square" data-index="1"></div>
@@ -24,7 +28,12 @@
         <div class="square" data-index="8"></div>
     </div>
     <div>
-        <button id="reset">Restart</button>
+        <button id="reset">Restart</button><br><br>
+        <button id="playername">Enter Player Names</button>
+    </div>
+    <br>
+    <div id="text-box">
+        Coded with <i class="fa fa-heart" style="color:red;"></i> by <a href="https://rajdeepdev10.github.io/">Rajdeep Dev</a>
     </div>
 
 

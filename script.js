@@ -1,6 +1,10 @@
-const player = (symbol) => {
-    return {symbol};
+const player = (symbol, playerName) => {
+    let isNextTurn = false;
+
+    return {symbol, playerName, isNextTurn};
 };
+
+
 
 
 // Module containing the 'javascript' board
@@ -27,8 +31,9 @@ const gameBoard = (() =>{
         // clear the 'html' board
         displayController.updateBoard();
 
-        gameLogic.isNextTurnPlayer1 = true;
-        gameLogic.round = 0;
+        gameLogic.resetRound();
+
+        document.getElementById("gameboard").classList.remove("gameover");
     };
 
     return {BOARD, playerMove, resetBoard};
@@ -37,26 +42,36 @@ const gameBoard = (() =>{
 
 
 
+
 // the 'main' function/module that handles the game logic
 const gameLogic =(() => {
-    const player1 = player('x');
-    const player2 = player('o');
-
-    let isNextTurnPlayer1 = true;
+    const player1 = player('x', 'Player1');
+    const player2 = player('o', 'Player2');
 
     let round = 0;
 
-    // possible combinations which results in a winner
+    player1.isNextTurn = true;
+    player2.isNextTurn = false;
+
+    document.getElementById("playername").addEventListener("click", () => {
+        player1.playerName = prompt("Player 1's name");
+        player2.playerName = prompt("Player2's name");
+    });
+
     const playerSymbol = () => {
-        if (isNextTurnPlayer1){
-            isNextTurnPlayer1 = false;
-            return 'x';
+        if (player1.isNextTurn){
+            player1.isNextTurn = false;
+            player2.isNextTurn = true;
+            document.getElementById("message").innerHTML = player2.playerName + "'s turn";
+            return 'x'
         }
-        else{
-            isNextTurnPlayer1 = true;
+        else if (player2.isNextTurn) {
+            player2.isNextTurn = false;
+            player1.isNextTurn = true;
+            document.getElementById("message").innerHTML = player1.playerName + "'s turn";
             return 'o';
         }
-    };
+    }
 
     const checkWin = () => {
         const WINNING_COMBINATIONS = [[0, 3, 6],
@@ -76,7 +91,11 @@ const gameLogic =(() => {
                 // check if those weren't blank spaces
                 if (gameBoard.BOARD[WINNING_COMBINATIONS[i][0]] != '' || gameBoard.BOARD[WINNING_COMBINATIONS[i][1]] != '' || gameBoard.BOARD[WINNING_COMBINATIONS[i][2]] != '')
                 {
-                    return gameBoard.BOARD[WINNING_COMBINATIONS[i][0]];
+                    // return winner name based on who is the winner
+                    if (player1.symbol == gameBoard.BOARD[WINNING_COMBINATIONS[i][0]])
+                    {
+                        return player1.playerName;
+                    } else return player2.playerName;
                 }
             }
         }
@@ -93,15 +112,17 @@ const gameLogic =(() => {
         }
     };
 
+    const resetRound = () => {
+        round = 0;
+        isNextTurnPlayer1 = true;
+    };
 
-    return {playerSymbol, checkWin, checkDraw};
+
+    return {playerSymbol, checkWin, checkDraw, resetRound};
 
 
 
 })();
-
-
-
 
 
 
@@ -111,6 +132,8 @@ const displayController = (() => {
     const squares_div = document.querySelectorAll(".square");
     const message_div = document.getElementById("message");
     const reset_btn = document.getElementById("reset");
+    const gameboard_div = document.getElementById("gameboard");
+
 
     // updates DOM with current state of gameBoard.BOARD array
     const updateBoard = () => {
@@ -126,6 +149,8 @@ const displayController = (() => {
         }
     };
 
+
+
     // eventlistener for clicking the squares
     squares_div.forEach(square => {
         square.addEventListener("click", event => {
@@ -137,20 +162,21 @@ const displayController = (() => {
                 displayController.updateBoard();
             }
 
-            // gameLogic.checkWin();
-            gameLogic.checkDraw();
-
             if(gameLogic.checkWin()){
-                console.log("congrats" + gameLogic.checkWin());
+                message_div.innerHTML = gameLogic.checkWin() + " Wins!";
+                gameboard_div.classList.add("gameover");
+
             }
 
-            // if winner, congratulate
-                // update messageboard
-            // disable board
-
+            if(gameLogic.checkDraw() && !gameLogic.checkWin()){
+                message_div.innerHTML = "Match Drawn";
+                gameboard_div.classList.add("gameover");
+            }
 
         });
     });
+
+
 
 
     // eventlistener for reset button
